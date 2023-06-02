@@ -10,7 +10,7 @@ Runs on bootstrap 3, Apache, and PHP7.
 
 Preview:
 
-[Imgur](https://i.imgur.com/m7xceb8.png)
+![Capture](https://github.com/psagat/dashboard/assets/16183473/42a020f1-b60a-4295-b44a-8713ef5c785d)
 
 Home Lab DASHBOARD
 
