@@ -8,6 +8,9 @@ Original credit goes to Ryan, thanks for the framework!
 
 Runs on bootstrap 3, Apache, and PHP7. 
 
+Preview:
+
+[Imgur](https://i.imgur.com/m7xceb8.png)
 
 Home Lab DASHBOARD
 
