@@ -325,7 +325,7 @@
 							<div class="panel-heading">
 							<h4 class="panel-title exoextralight weather-heading">
 										Weather
-            							<span id="uv" class="badge" rel="tooltip" data-toggle="tooltip" data-placement="left" title="uv"></span>
+            							<span id="uv" class="badge" rel="tooltip" data-toggle="tooltip" data-placement="left" title="UV Index"></span>
         							</h4>
 									</h4>
 							</div>		
