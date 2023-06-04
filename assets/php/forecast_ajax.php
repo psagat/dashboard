@@ -2,7 +2,8 @@
 <?php
 	Ini_Set( 'display_errors', true );
 	include("functions.php");
-		makeWeatherForecast();
+		$weatherdata_json = getWeatherData();
+		makeWeatherForecast($weatherdata_json);
 
 ?>
 

@@ -612,16 +612,21 @@ function getDir($b)
    return $dirs[round($b/45)];
 }
 
-function uvindex()
+function uvindex($weatherdata_json)
 {
-        $currentForecast0 = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json');
-        $currentForecast = json_decode($currentForecast0);
+        #$currentForecast0 = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json');
+        $currentForecast = json_decode($weatherdata_json);
         $uvindex = $currentForecast->currentConditions->uvindex;
-        
         return $uvindex;
 }
 
-function makeNewWeatherSidebar()
+function getWeatherData()
+{
+        $weatherdata_json = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json');
+        return $weatherdata_json;
+}
+
+function makeNewWeatherSidebar($weatherdata_json)
 {
         global $weather_lat;
         global $weather_long;
@@ -629,9 +634,9 @@ function makeNewWeatherSidebar()
 	$forecastLat = $weather_lat;
 	$forecastLong = $weather_long;
         $currentHour = date('H') + 1;
-        $currentForecast0 = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json'); 
+        //$currentForecast0 = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json'); 
 	//$currentForecast0 = file_get_contents('https://api.openweathermap.org/data/3.0/onecall?lat=43.125511&lon=-88.440258&units=Imperial&appid=06891a1a22ef724a6ca0504ec55e4642');
-        $currentForecast = json_decode($currentForecast0);
+        $currentForecast = json_decode($weatherdata_json);
         $currentSummary = $currentForecast->currentConditions->conditions;
 	$dailySummary = $currentForecast->daily->summary;
         $currentSummaryIcon = $currentForecast->currentConditions->icon;
@@ -716,16 +721,15 @@ function makeNewWeatherSidebar()
         //echo '<p class="text-right no-link-color" style="margin-bottom:-10px"><small><a href="index2.php">test.io</a></small></p> ';
 }
 
-function makeWeatherForecast()
+function makeWeatherForecast($weatherdata_json)
 {
         global $weather_lat;
         global $weather_long;
-        global $currentForecast0;
 	$forecastLat = $weather_lat;
 	$forecastLong = $weather_long;
         $currentHour = date('H') + 1;
-        $currentForecast0 = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json'); 
-        $currentForecast = json_decode($currentForecast0);
+        //$currentForecast0 = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json'); 
+        $currentForecast = json_decode($weatherdata_json);
         $currentSummary = $currentForecast->currentConditions->conditions;
 	$dailySummary = $currentForecast->daily->summary;
         $currentSummaryIcon = $currentForecast->currentConditions->icon;

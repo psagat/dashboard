@@ -2,8 +2,8 @@
 <?php
 	Ini_Set( 'display_errors', true );
 	include("functions.php");
-		
-		makeNewWeatherSidebar();
+	$weatherdata_json = getWeatherData();
+	makeNewWeatherSidebar($weatherdata_json);
 		//plexMovieStats();
 	
 ?>
