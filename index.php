@@ -3,11 +3,18 @@
 	Error_Reporting( E_ALL | E_STRICT );
 	Ini_Set( 'display_errors', true);
 
-	include("assets/php/functions.php");
+	include_once("assets/php/functions.php");
 	include('assets/php/Mobile_Detect.php');
 
 	$detect = new Mobile_Detect;
-	//$plexSessionXML = simplexml_load_file($config['network']['plex_server_ip'].'/status/sessions');
+
+	$file = 'assets/misc/weatherdata.json';
+
+	if (!file_exists($file)) {
+    // File doesn't exist, run your PHP script here
+    include_once('assets/php/get_weather_data_ajax.php');
+	}
+
 ?>
 <html lang="en">
 	<head>
@@ -221,6 +228,7 @@
 			        	$system_ram_refresh.load("assets/php/system_ram_ajax.php");
 						$uv_refresh.load("assets/php/uvindex_ajax.php");
 
+
 			        
 						var refreshIdfastest = setInterval(function(){
 			        	}, 10000); // at 3, 5 seconds python was crashing.
@@ -237,13 +245,14 @@
 			        	}, 30000); // 30 seconds
 
 			        	var refreshId60 = setInterval(function(){
-			        		
-			        	}, 60000); // 60 seconds
+							$.ajax({
+                				url: 'assets/php/get_weather_data_ajax.php',
+                				method: 'GET', 
+            				});	
+			        	}, 240000); // 240 seconds
 
 			        	var refreshIdslow = setInterval(function(){
 			            	$system_ram_refresh.load('assets/php/system_ram_ajax.php');
-			            //	$zfs_refresh.load("assets/php/zfs_ajax.php");
-			            //	$plex_movie_stats_refresh.load("assets/php/plex_movie_stats_ajax.php")
 				        	$system_IO_refresh.load("assets/php/cpu_IO_wait_ajax.php");
                             $system_load_refresh.load('assets/php/lambda_metrics_ajax.php');
 							$left_column_top_refresh.load('assets/php/left_column_top_ajax.php');
@@ -251,7 +260,6 @@
 			        	}, 300000); // 5 minutes
 
 			        	var refreshtopleft = setInterval(function(){
-			            	//$left_column_top_refresh.load('assets/php/left_column_top_ajax.php');
                             $sabqueue_refresh.load("assets/php/SabNZBqueue_ajax.php");
                             $calender_refresh.load("assets/php/calender_ajax.php");
                             $disk_space_refresh.load("assets/php/disk_space_ajax.php");
