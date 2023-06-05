@@ -14,6 +14,7 @@
 	$sabnzbd_api = $config['api_keys']['sabnzbd_api'];
 	$weather_lat = $config['misc']['weather_lat'];
 	$weather_long = $config['misc']['weather_long'];
+        $weather_data = $config['misc']['weather_data_loc'];
 	$filesystems = $config['filesystems'];
 	$filesystemsDarpa = $config['filesystemsDarpa'];
         $filesystemsLambda = $config['filesystemsLambda'];
@@ -22,8 +23,6 @@
 	global $sabnzbd_api;
 	$sabnzbdXML = simplexml_load_file('http://darpa:8080/api?mode=queue&output=xml&apikey='.$sabnzbd_api);
 	$sabnzbdXMLhistory = simplexml_load_file('http://darpa:8080/api?mode=history&limit=5&output=xml&apikey='.$sabnzbd_api);
-        //$currentForecast0 = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json'); 
-
 
 function getCpuUsage()
 {
@@ -384,8 +383,6 @@ function printCpuBar($percentavg, $cpuUserAvg, $cpuSysAvg, $cpuIdleAvg, $percent
                         echo '<div class="'. $progress .'" style="width: ' . $percent . '%"></div>';
                 echo '</div>';
         echo '</div>';
-
-
 }
 
 function printRamBar($percent, $used, $total, $name = "")
@@ -475,7 +472,6 @@ function printQueueHistory($numHistory)
         {
         $tmpHistory = $sabnzbdXMLhistory;
         $nameHistory = (string)$tmpHistory->slots->slot[$numHistory]->name;
-        #var_dump($nameHistory);
         $order = ($numHistory + 1);
         echo '<div class="exolight";>';
         echo $order . "." . $nameHistory . "\n" ;
@@ -612,31 +608,35 @@ function getDir($b)
    return $dirs[round($b/45)];
 }
 
-function uvindex($weatherdata_json)
+function uvindex()
 {
-        #$currentForecast0 = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json');
-        $currentForecast = json_decode($weatherdata_json);
+        global $weather_data;
+        $currentForecast0 = file_get_contents($weather_data);
+        $currentForecast = json_decode($currentForecast0);
         $uvindex = $currentForecast->currentConditions->uvindex;
         return $uvindex;
 }
 
+// Wrote this function to get the weather data once since it was clobbering the API and hitting the daily limit. It gets called once every 5 mins and stores
+// the metrics so that the other three functions can pull from it. 
 function getWeatherData()
 {
+        global $weather_data;
         $weatherdata_json = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json');
-        return $weatherdata_json;
+        file_put_contents($weather_data, $weatherdata_json);
 }
 
-function makeNewWeatherSidebar($weatherdata_json)
+function makeNewWeatherSidebar()
 {
         global $weather_lat;
         global $weather_long;
-        global $currentForecast0;
+        global $weather_data;
 	$forecastLat = $weather_lat;
 	$forecastLong = $weather_long;
         $currentHour = date('H') + 1;
-        //$currentForecast0 = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json'); 
 	//$currentForecast0 = file_get_contents('https://api.openweathermap.org/data/3.0/onecall?lat=43.125511&lon=-88.440258&units=Imperial&appid=06891a1a22ef724a6ca0504ec55e4642');
-        $currentForecast = json_decode($weatherdata_json);
+        $currentForecast0 = file_get_contents($weather_data);
+        $currentForecast = json_decode($currentForecast0);
         $currentSummary = $currentForecast->currentConditions->conditions;
 	$dailySummary = $currentForecast->daily->summary;
         $currentSummaryIcon = $currentForecast->currentConditions->icon;
@@ -721,15 +721,16 @@ function makeNewWeatherSidebar($weatherdata_json)
         //echo '<p class="text-right no-link-color" style="margin-bottom:-10px"><small><a href="index2.php">test.io</a></small></p> ';
 }
 
-function makeWeatherForecast($weatherdata_json)
+function makeWeatherForecast()
 {
         global $weather_lat;
         global $weather_long;
+        global $weather_data;
 	$forecastLat = $weather_lat;
 	$forecastLong = $weather_long;
         $currentHour = date('H') + 1;
-        //$currentForecast0 = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json'); 
-        $currentForecast = json_decode($weatherdata_json);
+        $currentForecast0 = file_get_contents($weather_data);
+        $currentForecast = json_decode($currentForecast0);
         $currentSummary = $currentForecast->currentConditions->conditions;
 	$dailySummary = $currentForecast->daily->summary;
         $currentSummaryIcon = $currentForecast->currentConditions->icon;

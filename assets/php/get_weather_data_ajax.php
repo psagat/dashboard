@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <?php
 	Ini_Set( 'display_errors', true );
-	include("functions.php");
-	echo comfort();
+	include_once("functions.php");
+	getWeatherData();
 ?>
-
