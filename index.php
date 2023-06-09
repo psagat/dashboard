@@ -8,13 +8,14 @@
 
 	$detect = new Mobile_Detect;
 
-	$file = 'assets/misc/weatherdata.json';
-
-	if (!file_exists($file)) {
-    // File doesn't exist, run your PHP script here
-    include_once('assets/php/get_weather_data_ajax.php');
+	$weatherdatafile = 'assets/misc/weatherdata.json';
+	$expirationTime = time() - 240; // 4 minutes in seconds
+	
+	if (!file_exists($weatherdatafile) || filemtime($weatherdatafile) < $expirationTime) {
+		// If the file doesn't exist or it's older than 4 minutes, create/update it.
+		include_once('assets/php/get_weather_data_ajax.php');
 	}
-
+	
 ?>
 <html lang="en">
 	<head>

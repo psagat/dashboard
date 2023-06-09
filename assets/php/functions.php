@@ -628,11 +628,8 @@ function getWeatherData()
 
 function makeNewWeatherSidebar()
 {
-        global $weather_lat;
-        global $weather_long;
+
         global $weather_data;
-	$forecastLat = $weather_lat;
-	$forecastLong = $weather_long;
         $currentHour = date('H') + 1;
 	//$currentForecast0 = file_get_contents('https://api.openweathermap.org/data/3.0/onecall?lat=43.125511&lon=-88.440258&units=Imperial&appid=06891a1a22ef724a6ca0504ec55e4642');
         $currentForecast0 = file_get_contents($weather_data);
@@ -717,17 +714,13 @@ function makeNewWeatherSidebar()
         echo '<h5 class="exoextralight" style="margin-top:10px">'.$sets.' at '.date('g:i A', $sunsetTime).'</h5>';
         echo '<h4 class="exoregular">Next 24 Hours</h4>';
         echo '<h5 class="exoextralight" style="margin-top:10px">'.$NextDaySummary.'</h5>';
-        echo '<p class="text-right no-link-color" style="margin-bottom:-10px"><small><a href="https://www.windy.com/-Weather-radar-radar?radar,42.910,-88.746,10">Windy.com</a></small></p> ';    
+        //echo '<p class="text-right no-link-color" style="margin-bottom:-10px"><small><a href="https://www.windy.com/-Weather-radar-radar?radar,42.910,-88.746,10">Windy.com</a></small></p> ';    
         //echo '<p class="text-right no-link-color" style="margin-bottom:-10px"><small><a href="index2.php">test.io</a></small></p> ';
 }
 
 function makeWeatherForecast()
 {
-        global $weather_lat;
-        global $weather_long;
         global $weather_data;
-	$forecastLat = $weather_lat;
-	$forecastLong = $weather_long;
         $currentHour = date('H') + 1;
         $currentForecast0 = file_get_contents($weather_data);
         $currentForecast = json_decode($currentForecast0);
@@ -772,6 +765,10 @@ function makeWeatherForecast()
             echo '<h4 class="exoregular" style="margin:0px 0px 20px 0px">'.$minTemp.'°</h4>';
             echo '</li>';
         }
+        echo '<p class="text-right no-link-color" style="margin-bottom:-10px"><small><a href="https://www.windy.com/-Weather-radar-radar?radar,42.910,-88.746,10">Windy.com</a></small></p> ';    
+
+
+
         echo '</ul>';
 
 }

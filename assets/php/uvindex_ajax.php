@@ -11,7 +11,5 @@
 		        });
 	</script>
 <?php
-//$weatherdata_json = getWeatherData();
-//echo uvindex($weatherdata_json);
 echo uvindex();
 ?>
