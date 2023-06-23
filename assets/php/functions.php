@@ -68,34 +68,21 @@ function makeQueue()
         global $sabnzbdXML;
         $tmp = $sabnzbdXML;
         $numJobs = ((string)$tmp->noofslots) - 1;
-	#echo '<div class="exolight">';
-        echo '<h4 class="exoregular">--- Queue ---</h4>';
-
-#        echo "--------------------Queue--------------------";
-
-	if ($numJobs == -1)
-	{
-		printQueue(-1);
-	}
-	else
-	{
-	$x = 0;
-	#for ($x = 0; $x <= $numJobs; $x++){
-	while ($x <= $numJobs) {
-	printQueue($x);
-	$x++;
-	}
-	}
-        echo '<br/>';
-        echo '<h4 class="exoregular">--- Recent ---</h4>';
-
-        #echo "--------------------Recent--------------------";
-
-	$y = 0;
-	while ($y <= 3) {
-	printQueueHistory($y);
-	$y++;
-	}
+        if ($numJobs >= 0) {
+                echo '<h4 class="exoregular">--- Queue ---</h4>';
+                $x = 0;
+                while ($x <= $numJobs) {
+                    printQueue($x);
+                    $x++;
+                }
+                echo '<br/>';
+        }
+            echo '<h4 class="exoregular">--- Recent ---</h4>';
+            $y = 0;
+            while ($y <= 3) {
+                printQueueHistory($y);
+                $y++;
+            } 
 }
 
 
@@ -438,29 +425,24 @@ function printDiskBarGB($dup, $dsu, $name = "")
 
 function printQueue($num)
 {
-
-	global $sabnzbdXML;
-
-	if ($num < 0)
-	{
-		echo '<div class="exolight">';
-        	echo "Clear";
-	        echo '</div>';
-	}
-	else
-	{
-	$tmp = $sabnzbdXML;
+        global $sabnzbdXML;
+        $tmp = $sabnzbdXML;
         $name = (string)$tmp->slots->slot[$num]->filename;
-	$order = ($num + 1);
-        echo '<div class="exolight"; max-height:100;>';
-	echo $order . "." . $name . "\n" ;
-	echo '</div>';
-	}
+        $order = ($num + 1);
+        $pattern = '/(.*?\b\d{3,4}p\b)/';
+        echo '<div class="exolight" style="max-height: 100px;">';
+        preg_match($pattern, $name, $matches);
+        if (!empty($matches[1])) {
+            echo $order . "." . $matches[1] . "\n";
+        } else {
+            echo $order . "." . $name . "\n";
+        }
+        echo '</div>';
+        
 }
 
 function printQueueHistory($numHistory)
 {
-
         global $sabnzbdXMLhistory;
 
         if ($numHistory < 0)
@@ -473,9 +455,16 @@ function printQueueHistory($numHistory)
         $tmpHistory = $sabnzbdXMLhistory;
         $nameHistory = (string)$tmpHistory->slots->slot[$numHistory]->name;
         $order = ($numHistory + 1);
-        echo '<div class="exolight";>';
-        echo $order . "." . $nameHistory . "\n" ;
+        $pattern = '/(.*?\b\d{3,4}p\b)/';
+        echo '<div class="exolight">';
+        preg_match($pattern, $nameHistory, $matches);
+        if (!empty($matches[1])) {
+            echo $order . "." . $matches[1] . "\n";
+        } else {
+            echo $order . "." . $nameHistory . "\n";
+        }
         echo '</div>';
+        
         }
 }
 
@@ -597,7 +586,7 @@ function printBandwidthBar($percent, $Mbps, $name = "")
 			echo $name . ": ";
 			echo number_format($Mbps,2) . " Mbps";
 		echo '<div class="progress">';
-			echo '<div class="progress-bar" style="width: ' . $percent . '%"></div>';
+		echo '<div class="progress-bar" style="width: ' . $percent . '%"></div>';
 		echo '</div>';
 	echo '</div>';
 }
@@ -628,7 +617,6 @@ function getWeatherData()
 
 function makeNewWeatherSidebar()
 {
-
         global $weather_data;
         $currentHour = date('H') + 1;
 	//$currentForecast0 = file_get_contents('https://api.openweathermap.org/data/3.0/onecall?lat=43.125511&lon=-88.440258&units=Imperial&appid=06891a1a22ef724a6ca0504ec55e4642');
@@ -708,12 +696,12 @@ function makeNewWeatherSidebar()
                 echo '<h4 class="exoextralight" style="margin-top:0px">Wind: Calm</h4>';
         }
         echo '<h4 class="exoregular">Next Hour</h4>';
-        echo '<h5 class="exoextralight" style="margin-top:10px">'.$hourlySummary.'</h5>';
-        echo '<h4 class="exoregular">The Sun</h4>';
+        echo '<h5 class="exoextralight" style="margin-top 0px">'.$hourlySummary.'</h5>';
+        //echo '<h4 class="exoregular">The Sun</h4>';
        //echo '<h5 class="exoextralight" style="margin-top:10px">'.$rises.' at '.date('g:i A', $sunriseTime).'</h5>';
-        echo '<h5 class="exoextralight" style="margin-top:10px">'.$sets.' at '.date('g:i A', $sunsetTime).'</h5>';
+        //echo '<h5 class="exoextralight" style="margin-top:0px">'.$sets.' at '.date('g:i A', $sunsetTime).'</h5>';
         echo '<h4 class="exoregular">Next 24 Hours</h4>';
-        echo '<h5 class="exoextralight" style="margin-top:10px">'.$NextDaySummary.'</h5>';
+        echo '<h5 class="exoextralight" style="margin-bottom:0px">'.$NextDaySummary.'</h5>';
         //echo '<p class="text-right no-link-color" style="margin-bottom:-10px"><small><a href="https://www.windy.com/-Weather-radar-radar?radar,42.910,-88.746,10">Windy.com</a></small></p> ';    
         //echo '<p class="text-right no-link-color" style="margin-bottom:-10px"><small><a href="index2.php">test.io</a></small></p> ';
 }

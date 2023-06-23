@@ -326,9 +326,8 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="row">
-						 
 						<!-- Left sidebar -->
-						<div class="col-md-3" style="padding-top: 20px;">
+						<div class="col-md-3" style="padding-top: 10px;">
 							<!-- Weather-->
 							<div class="panel panel-default">
 							<div class="panel-heading">
@@ -336,7 +335,6 @@
 										Weather
             							<span id="uv" class="badge" rel="tooltip" data-toggle="tooltip" data-placement="left" title="UV Index"></span>
         							</h4>
-									</h4>
 							</div>		
 								<div class="panel-body">	
 									<div id="left_column_top"></div>
@@ -350,7 +348,7 @@
             							<span id="ping" class="badge" rel="tooltip" data-toggle="tooltip" data-placement="left" title="Ping"></span>
         							</h4>
 								</div>
-								<div class="panel-body" style="height:175px">
+								<div class="panel-body" style="height:165px">
 									<div id="bandwidth"></div>
 								</div>
 							</div>
@@ -361,7 +359,7 @@
 										Services
 									</h4>
 								</div>
-                                                                <div id="services" class="panel-body">
+                                    <div id="services" class="panel-body">
 								</div>
 							</div>
 
@@ -378,11 +376,11 @@
 						</div>
 
 						<!-- Center Area -->
-                                                <div class="col-md-6" style="padding-top: 20px;">
+                                                <div class="col-md-6" style="padding-top: 10px;">
 
                                                         <div class="panel panel-default">
                                                         <div class="panel-heading">
-									<h4 class="panel-title exoextralight">
+														<h4 class="panel-title exoextralight">
                                                                               Forecast 
                                                                         </h4>
 							</div>
@@ -422,7 +420,7 @@
 						if ( $detect->isMobile() ):
 							echo '>';
 						else:
-							echo ' style="padding-top: 20px;">';
+							echo ' style="padding-top: 10px;">';
 						endif;?>
 							<!-- Server info -->
 							<div class="panel panel-default">
@@ -444,8 +442,6 @@
                                                                         <div id="disk_space_darpa" style="height:40px"></div>
 								</div>
 							</div>
-
-
  													 <div class="panel panel-default">
                                                                 <div class="panel-heading">
                                                                         <h4 class="panel-title exoextralight">

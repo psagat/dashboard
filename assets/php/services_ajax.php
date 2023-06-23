@@ -27,6 +27,7 @@ $services = array(
 	//new service("Deluge", 8112, "deluge:8112"),
 	new service("Sonarr", 8989, "darpa:8989"),
 	new service("Radarr", 7878, "darpa:7878"),
+	new service("Overseer", 5055, "docker:5055"),
 	new service("Emby", 8096, "emby:8096"),
     new service("Navidrome", 4533, "docker:4533"),
 	new service("LMS", 9000, "docker:9000"),
