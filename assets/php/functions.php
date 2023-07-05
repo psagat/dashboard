@@ -10,7 +10,7 @@
 	$pfsense_if_name = $config['network']['pfsense_if_name'];
 	$ssh_username = $config['credentials']['ssh_username'];
 	$ssh_password = $config['credentials']['ssh_password'];
-	$forecast_api = $config['api_keys']['forecast_api'];
+	$weather_api = $config['api_keys']['weather_api'];
 	$sabnzbd_api = $config['api_keys']['sabnzbd_api'];
 	$weather_lat = $config['misc']['weather_lat'];
 	$weather_long = $config['misc']['weather_long'];
@@ -611,7 +611,12 @@ function uvindex()
 function getWeatherData()
 {
         global $weather_data;
-        $weatherdata_json = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json');
+        global $weather_api;
+        global $weather_long;
+        global $weather_lat;
+        //$weatherdata_json = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json');
+        $weatherdata_json = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' . $weather_lat . '%2C' . $weather_long . '?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=' . $weather_api . '&contentType=json');
+        var_dump ($weatherdata_json);
         file_put_contents($weather_data, $weatherdata_json);
 }
 
@@ -619,13 +624,13 @@ function makeNewWeatherSidebar()
 {
         global $weather_data;
         $currentHour = date('H') + 1;
-	//$currentForecast0 = file_get_contents('https://api.openweathermap.org/data/3.0/onecall?lat=43.125511&lon=-88.440258&units=Imperial&appid=06891a1a22ef724a6ca0504ec55e4642');
         $currentForecast0 = file_get_contents($weather_data);
         $currentForecast = json_decode($currentForecast0);
         $currentSummary = $currentForecast->currentConditions->conditions;
 	$dailySummary = $currentForecast->daily->summary;
         $currentSummaryIcon = $currentForecast->currentConditions->icon;
         $currentTemp = round($currentForecast->currentConditions->temp);
+        $currentHum = round($currentForecast->currentConditions->humidity);
         $currentWindSpeed = round($currentForecast->currentConditions->windspeed);
         if ($currentWindSpeed > 0) {
                 $currentWindBearing = $currentForecast->currentConditions->winddir;
@@ -681,7 +686,6 @@ function makeNewWeatherSidebar()
                 'partly-cloudy-night' => 'I',
         ];
         $weatherIcon = $weatherIcons[$currentSummaryIcon];
-         //If there is a severe weather warning, display it
         echo '<ul class="list-inline" style="margin-bottom:-20px">';
         echo '<li><h1 data-icon="'.$weatherIcon.'" style="font-size:500%;margin:0px -10px 20px -5px"></h1></li>';
         echo '<li><ul class="list-unstyled">';
@@ -695,6 +699,7 @@ function makeNewWeatherSidebar()
         } else {
                 echo '<h4 class="exoextralight" style="margin-top:0px">Wind: Calm</h4>';
         }
+        echo '<h5 class="exoextralight" syle="margin-top:0px">Humidity: '.$currentHum.'%</h5>';
         echo '<h4 class="exoregular">Next Hour</h4>';
         echo '<h5 class="exoextralight" style="margin-top 0px">'.$hourlySummary.'</h5>';
         //echo '<h4 class="exoregular">The Sun</h4>';
@@ -702,7 +707,6 @@ function makeNewWeatherSidebar()
         //echo '<h5 class="exoextralight" style="margin-top:0px">'.$sets.' at '.date('g:i A', $sunsetTime).'</h5>';
         echo '<h4 class="exoregular">Next 24 Hours</h4>';
         echo '<h5 class="exoextralight" style="margin-bottom:0px">'.$NextDaySummary.'</h5>';
-        //echo '<p class="text-right no-link-color" style="margin-bottom:-10px"><small><a href="https://www.windy.com/-Weather-radar-radar?radar,42.910,-88.746,10">Windy.com</a></small></p> ';    
         //echo '<p class="text-right no-link-color" style="margin-bottom:-10px"><small><a href="index2.php">test.io</a></small></p> ';
 }
 

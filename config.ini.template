@@ -10,8 +10,7 @@ ssh_username = "" 	;for pfsense
 ssh_password = 	""	;for pfsense
 
 [api_keys]
-forecast_api = ""
-vcforecase_api = ""
+weather_api = ""
 sabnzbd_api = ""
 
 [misc]
