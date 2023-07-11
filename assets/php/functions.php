@@ -8,6 +8,7 @@
 	$local_pfsense_ip = $config['network']['local_pfsense_ip'];
 	$local_server_ip = $config['network']['local_server_ip'];
 	$pfsense_if_name = $config['network']['pfsense_if_name'];
+        $ping_ip = $config['network']['ping_ip'];
 	$ssh_username = $config['credentials']['ssh_username'];
 	$ssh_password = $config['credentials']['ssh_password'];
 	$weather_api = $config['api_keys']['weather_api'];
@@ -19,8 +20,7 @@
 	$filesystemsDarpa = $config['filesystemsDarpa'];
         $filesystemsLambda = $config['filesystemsLambda'];
 	#$wan1_ip = $config['wan1_ip'];
-	#$ping_ip = $config['ping_ip'];
-	global $sabnzbd_api;
+	//global $sabnzbd_api;
 	$sabnzbdXML = simplexml_load_file('http://darpa:8080/api?mode=queue&output=xml&apikey='.$sabnzbd_api);
 	$sabnzbdXMLhistory = simplexml_load_file('http://darpa:8080/api?mode=history&limit=5&output=xml&apikey='.$sabnzbd_api);
 
@@ -471,8 +471,8 @@ function printQueueHistory($numHistory)
 function ping()
 {
 	global $local_server_ip;
-        $pingIP = '8.8.8.8';
-        $avgPing = round(shell_exec("ping -c 5 " . $pingIP . " | grep dev | awk -F '/' '{print $5}'" ));
+        global $ping_ip;
+        $avgPing = round(shell_exec("ping -c 5 " . $ping_ip . " | grep dev | awk -F '/' '{print $5}'" ));
         return $avgPing;
 }
 
@@ -489,8 +489,9 @@ function comfort()
         $q5 =  curl_escape($curl , 'SELECT "value" FROM "Temperature" WHERE "location"=\'Nursery\' ORDER BY desc LIMIT 1');
         $q6 =  curl_escape($curl , 'SELECT "value" FROM "Temperature" WHERE "location"=\'JacobsRM\' ORDER BY desc LIMIT 1');
         $q7 =  curl_escape($curl , 'SELECT "value" FROM "Temperature" WHERE "location"=\'NataliesRM\' ORDER BY desc LIMIT 1');
+        $q8 =  curl_escape($curl , 'SELECT "value" FROM "Humidity" WHERE "location"=\'Master\' ORDER BY desc LIMIT 1');
 
-        for ($i = 0; $i < 8; $i++) {
+        for ($i = 0; $i < 9; $i++) {
                 $url = "http://grafana.local:8086/query?db=Custom&q=${"q".$i}";
                 curl_setopt_array($curl, array(
                         CURLOPT_RETURNTRANSFER => 1,
@@ -517,13 +518,14 @@ function comfort()
                      $tempNatalie = sprintf('%.0f',($results[7] * .10));
                 }
 
-                echo '<h4 class="exoregular">Humidity</h4>';
-                echo '<h5 class="exoregular" style="white-space: nowrap; padding-left: 1em;">Main: '.$results[1].'% | Basement: '.$results[2].'%</h5>';
-                echo '<h5 class="exoregular" style="white-space: nowrap;">Humidor: '.$humidor.'% </h5>';
+                echo '<h4 class="exoregular">Humidity</h4>';                
+                echo '<h5 class="exoregular" style="white-space: nowrap; padding-left: 1em;">Main: '.$results[1].'% | Master: '.$results[8].'%</h5>';
+                echo '<h5 class="exoregular" style="white-space: nowrap; padding-left: 1em;">Basement: '.$results[2].'% | Humidor: '.$humidor.'% </h5>';
+                echo '<hr>';
                 echo '<h4 class="exoregular">Temperature</h4>';
                 echo '<h5 class="exoregular" style="white-space: nowrap;">Main: '.$tempMain.'F | Nursery: '.$tempNursery.'F</h5>';
                 echo '<h5 class="exoregular" style="white-space: nowrap;">Jacob\'s Rm: '.$tempJacob.'F | Natalie\'s Rm: '.$tempNatalie.'F</h5>';
-
+                
 }
 
 function makeBandwidthBars()
@@ -614,13 +616,11 @@ function getWeatherData()
         global $weather_api;
         global $weather_long;
         global $weather_lat;
-        //$weatherdata_json = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/43.125511%2C-88.440258?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=YF6B49NUJV9XRXQXZJCELD8K2&contentType=json');
         $weatherdata_json = file_get_contents('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' . $weather_lat . '%2C' . $weather_long . '?unitGroup=us&include=events%2Cdays%2Chours%2Ccurrent%2Calerts&key=' . $weather_api . '&contentType=json');
-        var_dump ($weatherdata_json);
         file_put_contents($weather_data, $weatherdata_json);
 }
 
-function makeNewWeatherSidebar()
+function makeWeatherSidebar()
 {
         global $weather_data;
         $currentHour = date('H') + 1;
@@ -740,28 +740,49 @@ function makeWeatherForecast()
                 'partly-cloudy-day' => 'H',
                 'partly-cloudy-night' => 'I',
         ];
+       // echo '<h4 class="exoregular" style="margin: -15px; text-align: right; padding-right: 1em;">Oconomowoc</h4>';
+        //echo '<hr>';
         $weatherIcon = $weatherIcons[$icon];
         echo '<ul class="list-inline" style="margin-bottom:-20px">';
         for ($i = 0; $i <= 6; $i++) {
         $date = $currentForecast->days[$i]->datetime ; // the date you want to check
-        $dayOfWeek = substr(date('l', strtotime($date)), 0, 3); // get the day of the week as a string
+       // $dayOfWeek = substr(date('l', strtotime($date)), 0, 3); // get the day of the week as a string
+        if ($date === date('Y-m-d')) {
+                $dayOfWeek = 'Today';
+            } else {
+                $dayOfWeek = substr(date('l', strtotime($date)), 0, 3);
+            }
+            
         $maxTemp = round($currentForecast->days[$i]->tempmax);
         $minTemp = round($currentForecast->days[$i]->tempmin);
+        $precipProb = round($currentForecast->days[$i]->precipprob);
         $icon = $currentForecast->days[$i]->icon;
         $weatherIcon = $weatherIcons[$icon];
 
-            echo '<li>';
-            echo '<h4 class="exoregular" style="margin:10px">'.$dayOfWeek.'</h4>';
-            echo '<h1 data-icon="'.$weatherIcon.'" style="font-size:250%;margin:0px -10px 20px -10px"></h1>';
-            echo '<h4 class="exoregular" style="margin:0px">'.$maxTemp.'°</h4>';
-            echo '<h4 class="exoregular" style="margin:0px 0px 20px 0px">'.$minTemp.'°</h4>';
-            echo '</li>';
-        }
+        echo '<li>';
+        echo '<h4 class="exoregular" style="margin:10px">'.$dayOfWeek.'</h4>';
+        
+        if ($icon !== 'rain' && $icon !== 'snow') {
+                echo '<h1 data-icon="'.$weatherIcon.'" style="font-size:250%; margin:0px -10px 25px -10px"></h1>';
+        } 
+                else {
+                        echo '<h1 data-icon="'.$weatherIcon.'" style="font-size:250%; margin:0px -10px 0px -10px"></h1>';
+                }
+        
+        if ($icon === 'rain' || $icon === 'snow') {
+                echo '<p class="exoregular" style="margin:0px; font-size: 75%; margin-bottom: 10px; color: #428bca;">'.$precipProb.'%</p>';
+                echo '<h4 class="exoregular" style="margin:0px;">'.$maxTemp.'°</h4>';
+                echo '<h4 class="exoregular" style="margin:0px 0px 20px 0px;">'.$minTemp.'°</h4>';
+        } 
+                else {
+                        echo '<h4 class="exoregular" style="margin:0px;">'.$maxTemp.'°</h4>';
+                        echo '<h4 class="exoregular" style="margin:0px 0px 20px 0px;">'.$minTemp.'°</h4>';
+                 }
+
+        echo '</li>';
+        
+          }
         echo '<p class="text-right no-link-color" style="margin-bottom:-10px"><small><a href="https://www.windy.com/-Weather-radar-radar?radar,42.910,-88.746,10">Windy.com</a></small></p> ';    
-
-
-
         echo '</ul>';
-
 }
 ?>

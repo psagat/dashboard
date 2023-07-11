@@ -439,19 +439,18 @@
 									<div id="disk_space" style="height:160px"></div>
 									<hr>
 									<h4 class="exoextralight">Darpa Disk space<br/></h4>
-                                                                        <div id="disk_space_darpa" style="height:40px"></div>
+                                    <div id="disk_space_darpa" style="height:40px"></div>
 								</div>
 							</div>
- 													 <div class="panel panel-default">
-                                                                <div class="panel-heading">
-                                                                        <h4 class="panel-title exoextralight">
-                                                                               Comfort 
-                                                                        </h4>
-                                                                </div>
-                                                                <div id="comfort" class="panel-body">
-                                                                </div>
+ 									<div class="panel panel-default">
+                                		<div class="panel-heading">
+                                            <h4 class="panel-title exoextralight">
+                                            	Comfort 
+                                            </h4>
+                                        </div>
+                                    <div id="comfort" class="panel-body">
+                                    </div>
 																
-                                                        </div>
-                  
+                                    </div>
 		</body>
 </html>
