@@ -508,7 +508,8 @@ function comfort()
                      }
                      curl_close($curl);
                      $output = explode("," , $resp);
-                     $value = preg_replace('/\}|\]/', '', $output[4]);
+                     $value = preg_replace('/\}|\]/', '', $output[5]);
+
                      $results[] = $value;
                      $humidor = sprintf('%.0f',($results[0]));
                      $tempBasement = sprintf('%.0f',($results[3] * .10));
@@ -740,8 +741,7 @@ function makeWeatherForecast()
                 'partly-cloudy-day' => 'H',
                 'partly-cloudy-night' => 'I',
         ];
-       // echo '<h4 class="exoregular" style="margin: -15px; text-align: right; padding-right: 1em;">Oconomowoc</h4>';
-        //echo '<hr>';
+
         $weatherIcon = $weatherIcons[$icon];
         echo '<ul class="list-inline" style="margin-bottom:-20px">';
         for ($i = 0; $i <= 6; $i++) {
@@ -772,12 +772,12 @@ function makeWeatherForecast()
         if ($icon === 'rain' || $icon === 'snow') {
                 echo '<p class="exoregular" style="margin:0px; font-size: 75%; margin-bottom: 10px; color: #428bca;">'.$precipProb.'%</p>';
                 echo '<h4 class="exoregular" style="margin:0px;">'.$maxTemp.'°</h4>';
-                echo '<h4 class="exoregular" style="margin:0px 0px 20px 0px;">'.$minTemp.'°</h4>';
+                echo '<h4 class="exoregular" style="font-size: 115%; margin:0px 0px 20px 0px;">'.$minTemp.'°</h4>';
         } 
                 else {
                         echo '<h4 class="exoregular" style="margin:0px;">'.$maxTemp.'°</h4>';
-                        echo '<h4 class="exoregular" style="margin:0px 0px 20px 0px;">'.$minTemp.'°</h4>';
-                 }
+                        echo '<h4 class="exoregular" style="font-size: 115%; margin:0px 0px 20px 0px;">'.$minTemp.'°</h4>';
+                }
 
         echo '</li>';
         
