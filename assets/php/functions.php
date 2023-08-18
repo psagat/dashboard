@@ -486,13 +486,13 @@ function comfort()
         $q2 =  curl_escape($curl , 'SELECT "value" FROM "Humidity" WHERE "location"=\'Basement\' ORDER BY desc LIMIT 1');
         $q3 =  curl_escape($curl , 'SELECT "value" FROM "Temperature" WHERE "location"=\'Basement\' ORDER BY desc LIMIT 1');
         $q4 =  curl_escape($curl , 'SELECT "value" FROM "Temperature" WHERE "location"=\'Main\' ORDER BY desc LIMIT 1');
-        $q5 =  curl_escape($curl , 'SELECT "value" FROM "Temperature" WHERE "location"=\'Nursery\' ORDER BY desc LIMIT 1');
+        $q5 =  curl_escape($curl , 'SELECT "value" FROM "Temperature" WHERE "location"=\'ConnorsRM\' ORDER BY desc LIMIT 1');
         $q6 =  curl_escape($curl , 'SELECT "value" FROM "Temperature" WHERE "location"=\'JacobsRM\' ORDER BY desc LIMIT 1');
         $q7 =  curl_escape($curl , 'SELECT "value" FROM "Temperature" WHERE "location"=\'NataliesRM\' ORDER BY desc LIMIT 1');
         $q8 =  curl_escape($curl , 'SELECT "value" FROM "Humidity" WHERE "location"=\'Master\' ORDER BY desc LIMIT 1');
 
         for ($i = 0; $i < 9; $i++) {
-                $url = "http://grafana.local:8086/query?db=Custom&q=${"q".$i}";
+                $url = "http://grafana.local:8086/query?db=hvac&q=${"q".$i}";
                 curl_setopt_array($curl, array(
                         CURLOPT_RETURNTRANSFER => 1,
                         CURLOPT_URL => $url,
@@ -512,11 +512,11 @@ function comfort()
 
                      $results[] = $value;
                      $humidor = sprintf('%.0f',($results[0]));
-                     $tempBasement = sprintf('%.0f',($results[3] * .10));
-                     $tempMain =  sprintf('%.0f',($results[4] * .10));
-                     $tempNursery = sprintf('%.0f',($results[5] * .10));
-                     $tempJacob = sprintf('%.0f',($results[6] * .10));
-                     $tempNatalie = sprintf('%.0f',($results[7] * .10));
+                     $tempBasement = sprintf('%.0f',($results[3]));
+                     $tempMain =  sprintf('%.0f',($results[4]));
+                     $tempNursery = sprintf('%.0f',($results[5]));
+                     $tempJacob = sprintf('%.0f',($results[6]));
+                     $tempNatalie = sprintf('%.0f',($results[7]));
                 }
 
                 echo '<h4 class="exoregular">Humidity</h4>';                
@@ -524,7 +524,7 @@ function comfort()
                 echo '<h5 class="exoregular" style="white-space: nowrap; padding-left: 1em;">Basement: '.$results[2].'% | Humidor: '.$humidor.'% </h5>';
                 echo '<hr>';
                 echo '<h4 class="exoregular">Temperature</h4>';
-                echo '<h5 class="exoregular" style="white-space: nowrap;">Main: '.$tempMain.'F | Nursery: '.$tempNursery.'F</h5>';
+                echo '<h5 class="exoregular" style="white-space: nowrap;">Main: '.$tempMain.'F | Connor\'s Rm: '.$tempNursery.'F</h5>';
                 echo '<h5 class="exoregular" style="white-space: nowrap;">Jacob\'s Rm: '.$tempJacob.'F | Natalie\'s Rm: '.$tempNatalie.'F</h5>';
                 
 }

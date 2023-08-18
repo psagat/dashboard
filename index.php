@@ -20,7 +20,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Dashboard</title>
+		<title>Home Dashboard</title>
 		<meta name="author" content="dash">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- Le styles -->
@@ -29,6 +29,7 @@
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-wip/css/bootstrap.min.css"> 
 		<link rel="stylesheet" href="assets/css/custom.css">
 		<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.0/css/font-awesome.css" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<style type="text/css">
 			body {
 				text-align: center;
@@ -120,6 +121,30 @@
 			.carousel-control.right {
 				background-image: none;
 			}
+			.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
 		</style>
 		<link rel="apple-touch-icon-precomposed" href="/assets/ico/apple-touch-icon.png" />
 		<link rel="shortcut icon" href="assets/ico/favicon.ico">
@@ -424,7 +449,7 @@
 						endif;?>
 							<!-- Server info -->
 							<div class="panel panel-default">
-							<div class="panel-heading">
+								<div class="panel-heading">
 									<h4 class="panel-title exoextralight">
 										Server Metrics 
 									</h4>
